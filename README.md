@@ -15,21 +15,10 @@ Please feel free to contribute, to fork, to send merge request and to create tic
 
 ### Step 1: Install DatetimepickerBundle
 
-Add the following dependency to your composer.json file:
-
-``` json
-{
-    "require": {
-
-        "stephanecollot/datetimepicker-bundle": "dev-master"
-    }
-}
-```
-
-and then run
+Run command:
 
 ```bash
-php composer.phar update stephanecollot/datetimepicker-bundle
+composer require imiskuf/datetimepicker-bundle
 ```
 
 ### Step 2: Enable the bundle
