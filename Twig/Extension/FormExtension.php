@@ -11,8 +11,9 @@
 
 namespace SC\DatetimepickerBundle\Twig\Extension;
 
+use Symfony\Bridge\Twig\Form\TwigRenderer;
+use Symfony\Bridge\Twig\Node\SearchAndRenderBlockNode;
 use Symfony\Component\Form\FormView;
-use Symfony\Bridge\Twig\Form\TwigRendererInterface;
 
 /**
  * FormExtension extends Twig with form capabilities.
@@ -29,7 +30,7 @@ class FormExtension extends \Twig_Extension
      */
     public $renderer;
 
-    public function __construct(TwigRendererInterface $renderer)
+    public function __construct(TwigRenderer $renderer)
     {
         $this->renderer = $renderer;
     }
@@ -39,10 +40,10 @@ class FormExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
-            new \Twig_SimpleFunction('form_javascript', array($this, 'renderJavascript'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('form_stylesheet', null, array('node_class' => 'Symfony\Bridge\Twig\Node\SearchAndRenderBlockNode', 'is_safe' => array('html'))),
-        );
+        return [
+            new \Twig_SimpleFunction('form_javascript', [$this, 'renderJavascript'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('form_stylesheet', null, ['node_class' => SearchAndRenderBlockNode::class, 'is_safe' => ['html']]),
+        ];
     }
 
     /**

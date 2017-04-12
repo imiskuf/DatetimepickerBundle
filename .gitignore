@@ -1,6 +1,7 @@
 /.project
 /.buildpath
 /.settings/
+/.idea
 /composer.phar
 /php-cs-fixer.phar
 /vendor
@@ -20,3 +21,4 @@ phpunit.xml
 .vagrant
 Vagrantfile
 
+composer.lock

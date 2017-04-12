@@ -13,6 +13,7 @@ namespace SC\DatetimepickerBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 
 /**
  * Add a new twig.form.resources
@@ -23,6 +24,7 @@ class FormPass implements CompilerPassInterface
 {
     /**
      * {@inheritdoc}
+     * @throws InvalidArgumentException
      */
     public function process(ContainerBuilder $container)
     {

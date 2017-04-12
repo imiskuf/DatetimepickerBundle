@@ -14,6 +14,7 @@ class SCDatetimepickerExtension extends Extension
 {
     /**
      * {@inheritDoc}
+     * @throws \Exception
      */
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -23,18 +24,15 @@ class SCDatetimepickerExtension extends Extension
 		$loader->load('twig.xml');
         $loader->load('datetime.xml');
 
-        if (isset($configs["picker"]) && !empty($configs["picker"]['enabled'])) {
-            $method = 'register' . ucfirst("picker") . 'Configuration';
-
-            $this->$method($configs["picker"], $container);
+        if (isset($configs['picker']) && !empty($configs['picker']['enabled'])) {
+            $this->registerPickerConfiguration($configs['picker'], $container);
         }
-
     }
 
     /**
      * Loads Picker configuration
      *
-     * @param array            $config    A configuration array
+     * @param array            $configs   A configuration array
      * @param ContainerBuilder $container A ContainerBuilder instance
      */
     private function registerPickerConfiguration(array $configs, ContainerBuilder $container)

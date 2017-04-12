@@ -14,6 +14,7 @@ namespace SC\DatetimepickerBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\Exception\AccessException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -33,13 +34,17 @@ class DatetimeType extends AbstractType
      *
      * @var array
      */
-    private static $malotFormater = array("yyyy", "yyyy", "ss", "ii", "hh", "HH", "dd", "mm", "MM",   "yy", "p", "P", "s", "i", "h", "H", "d", "m", "M");
+    private static $malotFormater = [
+        'yyyy', 'yyyy', 'ss', 'ii', 'hh', 'HH', 'dd', 'mm', 'MM', 'yy', 'p', 'P', 's', 'i', 'h', 'H', 'd', 'm', 'M'
+    ];
 
     /**
      *
      * @var array
      */
-    private static $intlFormater  = array("y", "yyyy", "ss", "mm", "HH", "hh", "dd", "MM", "MMMM", "yy", "a", "a", "s", "m", "H", "h", "d", "M", "MMM");
+    private static $intlFormater = [
+        'y', 'yyyy', 'ss', 'mm', 'HH', 'hh', 'dd', 'MM', 'MMMM', 'yy', 'a', 'a', 's', 'm', 'H', 'h', 'd', 'M', 'MMM'
+    ];
 
     /**
     * Constructs
@@ -49,7 +54,6 @@ class DatetimeType extends AbstractType
     public function __construct(array $options)
     {
         $this->options = $options;
-
     }
 
     /**
@@ -60,44 +64,49 @@ class DatetimeType extends AbstractType
         $pickerOptions = array_merge($this->options, $options['pickerOptions']);
 
         //Set automatically the language
-        if(!isset($pickerOptions['language']))
+        if (!isset($pickerOptions['language'])) {
             $pickerOptions['language'] = \Locale::getDefault();
-        if($pickerOptions['language'] == 'en')
-            unset($pickerOptions['language']);
-
-        //Set the defaut format of malot.fr/bootstrap-datetimepicker
-        if(!isset($pickerOptions['format']))
-            $pickerOptions['format'] = 'mm/dd/yyyy HH:ii';
-
-        if ($pickerOptions['formatter'] == 'php'){
-            $pickerOptions['format'] = DatetimeType::convertIntlFormaterToMalot( $pickerOptions['format'] );
         }
 
-        $view->vars = array_replace($view->vars, array(
-            'pickerOptions' => $pickerOptions,
-        ));
+        if ('en' === $pickerOptions['language']) {
+            unset($pickerOptions['language']);
+        }
+
+        //Set the defaut format of malot.fr/bootstrap-datetimepicker
+        if (!isset($pickerOptions['format'])) {
+            $pickerOptions['format'] = 'mm/dd/yyyy HH:ii';
+        }
+
+        if ('php' === $pickerOptions['formatter']){
+            $pickerOptions['format'] = DatetimeType::convertIntlFormaterToMalot($pickerOptions['format']);
+        }
+
+        $view->vars = array_replace($view->vars, [
+            'pickerOptions' => $pickerOptions
+        ]);
     }
 
     /**
     * {@inheritdoc}
+     * @throws AccessException
     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $configs = $this->options;
 
         $resolver
-            ->setDefaults(array(
+            ->setDefaults([
                 'widget' => 'single_text',
                 'format' => function (Options $options, $value) use ($configs) {
                     $pickerOptions = array_merge($configs, $options['pickerOptions']);
 
-                    if ($pickerOptions['formatter'] == 'php'){
+                    if ('php' === $pickerOptions['formatter']){
                         if (isset($pickerOptions['format'])){
                             return $pickerOptions['format'];
                         } else {
                             return 'mm/dd/yyyy HH:ii';
                         }
-                    } elseif ($pickerOptions['formatter'] == 'js'){
+                    } elseif ('js' === $pickerOptions['formatter']){
                         if (isset($pickerOptions['format'])){
                             return DatetimeType::convertMalotToIntlFormater( $pickerOptions['format'] );
                         } else {
@@ -105,8 +114,8 @@ class DatetimeType extends AbstractType
                         }
                     }
                 },
-                'pickerOptions' => array(),
-            ));
+                'pickerOptions' => [],
+            ]);
     }
 
     /**
@@ -117,7 +126,7 @@ class DatetimeType extends AbstractType
         $intlToMalot = array_combine(self::$intlFormater, self::$malotFormater);
 
         $patterns = preg_split('([\\\/.:_;,\s-\ ]{1})', $formatter);
-        $exits = array();
+        $exits = [];
 
         foreach ($patterns as $val) {
             if (isset($intlToMalot[$val])){
@@ -139,7 +148,7 @@ class DatetimeType extends AbstractType
         $malotToIntl = array_combine(self::$malotFormater, self::$intlFormater);
 
         $patterns = preg_split('([\\\/.:_;,\s-\ ]{1})', $formatter);
-        $exits = array();
+        $exits = [];
 
         foreach ($patterns as $val) {
             if (isset($malotToIntl[$val])){
@@ -161,12 +170,15 @@ class DatetimeType extends AbstractType
     {
         return \Symfony\Component\Form\Extension\Core\Type\DateTimeType::class;
     }
-    
-    public function getName()
-    {
-        return 'collot_datetime';
-    }
 
+    /**
+     * Returns the prefix of the template block name for this type.
+     *
+     * The block prefix defaults to the underscored short class name with
+     * the "Type" suffix removed (e.g. "UserProfileType" => "user_profile").
+     *
+     * @return string The prefix of the template block name
+     */
     public function getBlockPrefix()
     {
         return 'collot_datetime';

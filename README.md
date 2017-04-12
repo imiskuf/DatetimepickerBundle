@@ -1,3 +1,8 @@
+### Requirements
+
+Symfony 2.8.* or 3.0+
+PHP 5.6+ or 7.0+
+
 #DatetimepickerBundle
 
 This bundle implements the [Bootstrap DateTime Picker](https://github.com/smalot/bootstrap-datetimepicker) in a Form Type for Symfony 2.*. The bundle structure is inspired by GenemuFormBundle.
